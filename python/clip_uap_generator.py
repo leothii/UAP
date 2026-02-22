@@ -451,8 +451,10 @@ def main():
     print("Initializing UAP Generator...")
     print("-"*60)
     
-    # Define annotation path (using raw string for Windows paths)
-    ann_path = r"../data/MS-COCO/annotations/captions_val2017.json"
+    # Define annotation path - resolve relative to script location
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    ann_path = os.path.join(script_dir, "..", "data", "MS-COCO", "annotations", "captions_val2017.json")
+    ann_path = os.path.normpath(ann_path)
     
     # Initialize components
     print("\n[1/3] Loading CLIP model...")

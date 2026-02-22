@@ -138,7 +138,8 @@ class UniversalPerturbationGenerator:
                  delta: float = 0.2,
                  norm_type: str = "inf",
                  save_checkpoints: bool = True,
-                 checkpoint_dir: str = "../data",
+                 checkpoint_dir: str = "data/results",
+                 use_annotations: bool = False,
                  seed: Optional[int] = None) -> torch.Tensor:
         """
         Generate Universal Adversarial Perturbation
@@ -155,6 +156,7 @@ class UniversalPerturbationGenerator:
             norm_type: "inf" (recommended) or "2"
             save_checkpoints: Save perturbation after each iteration
             checkpoint_dir: Directory for checkpoints
+            use_annotations: Use real COCO captions (requires annotations file)
             seed: Random seed for reproducibility
             
         Returns:
@@ -172,6 +174,16 @@ class UniversalPerturbationGenerator:
         print(f"Learning rate:      {learning_rate:.4f}")
         print(f"Alpha blending:     {alpha:.2f} (mobile app)")
         print(f"Target fooling:     {(1-delta)*100:.1f}%")
+        
+        # Check annotation status
+        has_annotations = len(self.data_loader.image_to_captions) > 0
+        print(f"Using annotations:  {use_annotations and has_annotations}")
+        if use_annotations and not has_annotations:
+            print("  WARNING: use_annotations=True but no annotations loaded!")
+            print("  Falling back to generic descriptions")
+        elif use_annotations and has_annotations:
+            print(f"  ✓ Using {len(self.data_loader.image_to_captions)} human-verified COCO captions")
+        
         print("="*60)
         
         # Initialize perturbation
@@ -200,7 +212,11 @@ class UniversalPerturbationGenerator:
             
             # Get mini-batch
             image_paths = self.data_loader.get_mini_batch(batch_size, seed=seed)
-            text_descriptions = self.data_loader.create_text_descriptions_for_batch(batch_size)
+            text_descriptions = self.data_loader.create_text_descriptions_for_batch(
+                batch_size, 
+                use_annotations=use_annotations,
+                image_paths=image_paths
+            )
             
             # Load and process images
             print("Loading mini-batch...")
@@ -435,12 +451,16 @@ def main():
     print("Initializing UAP Generator...")
     print("-"*60)
     
+    # Define annotation path (using raw string for Windows paths)
+    ann_path = r"../data/MS-COCO/annotations/captions_val2017.json"
+    
     # Initialize components
     print("\n[1/3] Loading CLIP model...")
     clip_model = CLIPModelWrapper(model_name="ViT-B/32")
     
-    print("\n[2/3] Loading MS-COCO dataset...")
-    data_loader = COCODataLoader()
+    print(f"\n[2/3] Loading MS-COCO dataset...")
+    print(f"  Annotations: {ann_path}")
+    data_loader = COCODataLoader(annotations_file=ann_path)
     
     print("\n[3/3] Initializing generator...")
     generator = UniversalPerturbationGenerator(
@@ -462,6 +482,7 @@ def main():
         delta=0.2,           # 80% fooling target
         norm_type="inf",     # L-infinity norm
         save_checkpoints=True,
+        use_annotations=True,# Use real COCO captions for training
         seed=42              # Reproducibility
     )
     

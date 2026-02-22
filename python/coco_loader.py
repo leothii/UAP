@@ -237,21 +237,28 @@ class COCODataLoader:
     
     def create_text_descriptions_for_batch(self, 
                                            batch_size: int,
-                                           use_annotations: bool = False) -> List[str]:
+                                           use_annotations: bool = False,
+                                           image_paths: Optional[List[str]] = None) -> List[str]:
         """
         Create text descriptions matched to a batch of images
         
         Args:
             batch_size: Number of descriptions needed
             use_annotations: Whether to use real COCO captions
+            image_paths: Optional list of image paths to match captions to
             
         Returns:
             List of text descriptions
         """
         if use_annotations and len(self.image_to_captions) > 0:
-            # Use real captions
-            batch_paths = self.get_mini_batch(batch_size)
-            descriptions = [self.get_image_with_caption(path)[1] for path in batch_paths]
+            # Use real captions matched to specific images
+            if image_paths is not None:
+                # Extract captions for the provided image paths
+                descriptions = [self.get_image_with_caption(path)[1] for path in image_paths[:batch_size]]
+            else:
+                # Fallback: sample random batch (may not match images in generator)
+                batch_paths = self.get_mini_batch(batch_size)
+                descriptions = [self.get_image_with_caption(path)[1] for path in batch_paths]
         else:
             # Use diverse generic descriptions
             base_descriptions = self.get_diverse_descriptions(20)

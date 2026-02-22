@@ -284,6 +284,9 @@ class UniversalPerturbationGenerator:
             
             # Save checkpoint
             if save_checkpoints:
+                # Ensure checkpoint directory exists
+                os.makedirs(checkpoint_dir, exist_ok=True)
+                
                 checkpoint_path = os.path.join(
                     checkpoint_dir, 
                     f"uap_checkpoint_iter{iteration+1}.npy"
@@ -305,6 +308,9 @@ class UniversalPerturbationGenerator:
         print(f"Similarity drop:    {baseline_sim - eval_results['avg_similarity']:.2f}%")
         print(f"Perturbation norm:  {torch.max(torch.abs(v)).item():.6f}")
         print(f"{'='*60}")
+        
+        # Ensure output directory exists
+        os.makedirs(checkpoint_dir, exist_ok=True)
         
         # Save final perturbation
         final_path = os.path.join(checkpoint_dir, "clip_uap_final.npy")

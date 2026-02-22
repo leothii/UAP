@@ -26,15 +26,38 @@ High-Fidelity Constraints: Generation is bounded to ensure a Structural Similari
 Resource-Efficient Pipeline: Utilizes a custom MS-COCO 2017 data loader designed for mini-batching (1,000 images), enabling optimization on consumer-grade CPU hardware.
 
 📁 Repository Structure
-├── data/                    # Local storage for MS-COCO 2017 & UAP results
-├── mobile_assets/           # Final mobile-ready PNG overlays
-├── python/                  # Core research scripts
-│   ├── clip_integration.py  # Standardized wrapper for CLIP ViT-B/32
-│   ├── coco_loader.py       # Memory-efficient MS-COCO pipeline
-│   ├── clip_uap_generator.py# Main UAP engine (Moosavi-Dezfooli et al. base)
-│   └── fidelity_validator.py# SSIM, PSNR, and Similarity drop validation
-└── requirements.txt         # Environment dependencies
-|── universal-master         # LS4 UAP sourcecode
+```
+UAP/
+├── README.md                       # Project documentation
+├── data/                           # Dataset and results storage
+│   ├── MS-COCO/                    # MS-COCO 2017 dataset
+│   │   └── val2017/                # Validation images (5,000 images)
+│   └── results/                    # Generated UAPs and visualizations
+├── mobile-assets/                  # Final mobile-ready PNG overlays
+├── progress_reports/               # Research documentation and reports
+├── python/                         # Core research scripts
+│   ├── clip_integration.py         # Standardized wrapper for CLIP ViT-B/32
+│   ├── clip_uap_generator.py       # Main UAP engine (Moosavi-Dezfooli et al. base)
+│   ├── coco_loader.py              # Memory-efficient MS-COCO pipeline
+│   ├── export_mobile_assets.py     # Export perturbations for mobile deployment
+│   ├── fidelity_validator.py       # SSIM, PSNR, and Similarity drop validation
+│   └── requirements.txt            # Python dependencies
+└── universal-master/               # Original DeepFool UAP research code
+    ├── README.md                   # Original repository documentation
+    ├── matlab/                     # MATLAB implementation
+    │   ├── universal_perturbation.m
+    │   ├── demo_caffe.m
+    │   └── data/                   # Pretrained model definitions
+    ├── precomputed/                # Pre-generated UAPs for ImageNet
+    │   ├── CaffeNet.mat
+    │   ├── GoogLeNet.mat
+    │   ├── ResNet-152.mat
+    │   └── VGG-*.mat
+    └── python/                     # Python implementation
+        ├── universal_pert.py       # Original UAP algorithm
+        ├── deepfool.py             # DeepFool base algorithm
+        └── data/                   # Labels and precomputed data
+```
 
 
 🛠️ Installation & Setup

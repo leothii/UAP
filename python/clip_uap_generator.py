@@ -10,6 +10,7 @@ This is the MAIN algorithm that creates the "Universal Cloak" by:
 
 import numpy as np
 import torch
+import clip
 import os
 from tqdm import tqdm
 from typing import Optional, Dict, List
@@ -200,14 +201,6 @@ class UniversalPerturbationGenerator:
             # Get mini-batch
             image_paths = self.data_loader.get_mini_batch(batch_size, seed=seed)
             text_descriptions = self.data_loader.create_text_descriptions_for_batch(batch_size)
-            
-            # Pre-compute text features
-            text_tokens = torch.cat([
-                torch.tensor(self.clip_model.model.encode_text(
-                    torch.tensor([desc]).to(self.device)
-                )).to(self.device) 
-                for desc in text_descriptions
-            ])
             
             # Load and process images
             print("Loading mini-batch...")

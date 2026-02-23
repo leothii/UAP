@@ -408,7 +408,7 @@ def main():
     clip_model = CLIPModelWrapper(model_name="ViT-B/32")
     
     print("\n[2/3] Loading perturbation...")
-    perturbation_path = "../data/clip_uap_final.npy"
+    perturbation_path = os.path.join("data", "results", "clip_uap_final.npy")
     
     if not os.path.exists(perturbation_path):
         print(f"Error: Perturbation not found: {perturbation_path}")

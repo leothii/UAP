@@ -1,5 +1,5 @@
-"""
-export_mobile_assets.py - Mobile Deployment Asset Exporter
+"""Mobile Deployment Asset Exporter
+
 
 This module bridges research to Flutter mobile development by preparing the
 optimized Universal Adversarial Perturbation (UAP) for mobile deployment.
@@ -27,8 +27,6 @@ Workflow:
     5. Validate exported assets
     6. Generate Flutter integration guide
 
-Author: UAP Research Project
-Date: February 2026
 """
 
 import os

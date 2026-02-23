@@ -3,7 +3,7 @@ Fidelity Validator
 Quality control for Universal Adversarial Perturbations
 
 Validates that protected images maintain high visual quality:
-- SSIM (Structural Similarity Index) > 0.90 (thesis requirement)
+- SSIM (Structural Similarity Index) > 0.90
 - PSNR (Peak Signal-to-Noise Ratio) measurement
 - Alpha parameter optimization
 """

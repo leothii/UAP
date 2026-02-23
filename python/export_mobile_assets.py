@@ -57,7 +57,7 @@ class MobileAssetExporter:
         Initialize the mobile asset exporter.
         
         Args:
-            uap_path: Path to the .npy UAP file (e.g., "clip_uap_final.npy")
+            uap_path: Path to UAP numpy file (e.g., 'data/results/clip_uap_final.npy')
             output_dir: Directory to save exported assets
             default_alpha: Default alpha value for transparency (0.7 = 70% blend)
         """
@@ -73,6 +73,17 @@ class MobileAssetExporter:
         self.uap = np.load(uap_path)
         print(f"UAP shape: {self.uap.shape}, range: [{self.uap.min():.4f}, {self.uap.max():.4f}]")
         
+        # Handle different UAP formats
+        if self.uap.ndim == 4:
+            # Format: (1, C, H, W) - squeeze batch and transpose to (H, W, C)
+            self.uap = self.uap.squeeze(0)  # Remove batch dimension
+            self.uap = np.transpose(self.uap, (1, 2, 0))  # Convert CHW to HWC
+            print(f"Converted from 4D to 3D: {self.uap.shape}")
+        elif self.uap.ndim == 3 and self.uap.shape[0] == 3:
+            # Format: (C, H, W) - transpose to (H, W, C)
+            self.uap = np.transpose(self.uap, (1, 2, 0))
+            print(f"Converted from CHW to HWC: {self.uap.shape}")
+        
         # Validate UAP format
         self._validate_uap()
     
@@ -83,9 +94,9 @@ class MobileAssetExporter:
         Raises:
             ValueError: If UAP format is invalid
         """
-        # Check dimensionality
+        # Check dimensionality (should be H, W, C after preprocessing)
         if self.uap.ndim != 3:
-            raise ValueError(f"UAP must be 3D (H, W, C), got shape: {self.uap.shape}")
+            raise ValueError(f"UAP must be 3D (H, W, C) after preprocessing, got shape: {self.uap.shape}")
         
         # Check channels
         if self.uap.shape[2] != 3:
@@ -522,8 +533,8 @@ def main():
     parser.add_argument(
         '--uap-path',
         type=str,
-        default='clip_uap_final.npy',
-        help='Path to the UAP .npy file (default: clip_uap_final.npy)'
+        default='data/results/clip_uap_final.npy',
+        help='Path to UAP file (default: data/results/clip_uap_final.npy)'
     )
     parser.add_argument(
         '--output-dir',

@@ -1,5 +1,5 @@
 
-# 🔒 Mobile-Based Cloaking of Proprietary Images against Unauthorized AI Training
+# 🔒 VeilAI - Mobile-Based Cloaking of Proprietary Images against Unauthorized AI Training
 
 ---
 
@@ -14,9 +14,9 @@
 
 ## 📌 **Project Overview**
 
-This repository contains the implementation of a **defensive mechanism** designed to protect proprietary images from being harvested for AI model training. The system generates **Universal Adversarial Perturbations (UAPs)** that semantic-aligning models, such as **CLIP (ViT-B/32)**, cannot correctly interpret.
+This repository contains **VeilAI** - a defensive mechanism designed to protect proprietary images from being harvested for AI model training. The system generates **Universal Adversarial Perturbations (UAPs)** that semantic-aligning models, such as **CLIP (ViT-B/32)**, cannot correctly interpret.
 
-The primary goal is to deploy these protections via a **mobile application**, allowing creators to "cloak" their images using hardware-accelerated **Alpha Blending** before digital publication.
+VeilAI's primary goal is to deploy these protections via a **mobile application**, allowing creators to "cloak" their images using hardware-accelerated **Alpha Blending** before digital publication.
 
 ---
 
